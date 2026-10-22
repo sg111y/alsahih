@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الجمع المسند — شجرة الأسانيد</title>
+<style>
+:root{--bg:#faf7f0;--fg:#1f2a24;--mut:#6b756e;--card:#fff;--ac:#1f6b4f;--bd:#e3ddcc;--chip:#e8f1ec;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#141a17;--fg:#e8ece9;--mut:#9aa69f;--card:#1d2621;--ac:#5fc79b;--bd:#2c3731;--chip:#25332b}}
+html,body{margin:0}body{background:var(--bg);color:var(--fg);font-family:'Amiri','Traditional Arabic',Tahoma,serif;font-size:18px;line-height:1.7;padding:12px;max-width:900px;margin:auto}
+h1{font-size:22px;margin:6px 0}.sub{color:var(--mut);font-size:14px;margin-bottom:10px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:8px 0;z-index:5}
+input{width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg);font:inherit;font-size:16px;box-sizing:border-box}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 0}
+.tab,.chip{border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:20px;padding:4px 12px;font:inherit;font-size:15px;white-space:nowrap;cursor:pointer}
+.tab.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.chip{background:var(--chip);padding:1px 10px;font-size:14px;margin:2px}
+.chip.on{background:var(--ac);color:#fff}
+details{margin-right:14px;border-right:2px solid var(--bd);padding-right:8px}
+summary{cursor:pointer;padding:3px 0;list-style:none}summary::before{content:"◂ ";color:var(--ac)}details[open]>summary::before{content:"▾ "}
+.n{font-weight:700;color:var(--ac)}.ct{color:var(--mut);font-size:13px}
+.h{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:6px 10px;margin:4px 0 4px 0;font-size:16px}
+.b{font-size:12px;border-radius:8px;padding:0 7px;margin-right:6px;background:var(--chip);color:var(--ac)}
+.c{color:#a0651a;font-weight:700}
+#narr{max-height:90px;overflow:auto;margin:4px 0}
+.hint{color:var(--mut);font-size:13px}
+.t{cursor:pointer;padding:10px 12px}.t:active{background:var(--chip)}h2{font-size:20px;margin:10px 0 2px}.leaf{margin-right:14px;padding:1px 8px;border-right:2px solid var(--bd);color:var(--fg)}.tree{margin-top:8px}.g{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 10px;margin:10px 0}.gh{font-weight:700;color:var(--ac);margin-bottom:4px}.ti{cursor:pointer}.full{margin:0 10px 6px}.hi{color:var(--ac);background:var(--chip);border-radius:6px;padding:0 4px}</style></head><body>
+<h1>الجمع المسند بين الصحيحين</h1>
+<div class="sub">قائمة الأحاديث — اضغط على العنوان لتظهر شجرة إسناده</div>
+<div class="bar" id="bar"><div class="tabs" id="nav"><button class="tab on" data-p="h">الأحاديث</button><button class="tab" data-p="s">السلاسل</button></div><input id="q" placeholder="ابحث باسم راوٍ أو حديث…"><div class="tabs" id="tabs"></div></div>
+<div class="hint" id="info"></div><div id="main"></div>
+<script>
+// [مسند, حديث, نوع, السلسلة من أول راوٍ بعد الشيخين إلى الصحابي]
+const D=[
+["أبي بن كعب","اللقطة","متفق عليه","بندار|غندر|شعبة|سلمة بن كهيل|سويد بن غفلة|أبي بن كعب"],
+["أبي بن كعب","قصة موسى والخضر","متفق عليه","سفيان بن عيينة|عمرو بن دينار|سعيد بن جبير|ابن عباس|أبي بن كعب"],
+["أبي بن كعب","قصة موسى والخضر (طريق ثانٍ)","متفق عليه","الزهري|عبيد الله بن عبد الله بن عتبة|ابن عباس|أبي بن كعب"],
+["أبي بن كعب","ليلة القدر","أفراد مسلم","محمد بن حاتم|سفيان بن عيينة|عاصم بن أبي النجود|زر بن حبيش|أبي بن كعب"],
+["أبي بن كعب","ثبوت المعوذتين","أفراد البخاري","علي بن المديني|سفيان بن عيينة|عاصم بن أبي النجود|زر بن حبيش|أبي بن كعب"],
+["أبي بن كعب","فضل آية الكرسي","أفراد مسلم","أبو بكر بن أبي شيبة|عبد الأعلى بن عبد الأعلى|الجريري|أبو السليل|عبد الله بن رباح|أبي بن كعب"],
+["أسامة بن زيد","ما جاء في الطاعون","متفق عليه","الزهري|عامر بن سعد|أسامة بن زيد"],
+["أسامة بن زيد","ما جاء في الطاعون (طريق ثانٍ)","متفق عليه","محمد بن المنكدر|عامر بن سعد|أسامة بن زيد"],
+["أسامة بن زيد","النهي عن قتل من قال لا إله إلا الله","متفق عليه","الأعمش|أبو ظبيان|أسامة بن زيد"],
+["أسامة بن زيد","التعزية عند موت الولد","متفق عليه","عاصم الأحول|أبو عثمان النهدي|أسامة بن زيد"],
+["أسامة بن زيد","فتنة النساء","متفق عليه","سليمان التيمي|أبو عثمان النهدي|أسامة بن زيد"],
+["أسامة بن زيد","أكثر أهل الجنة وأكثر أهل النار","متفق عليه","سليمان التيمي|أبو عثمان النهدي|أسامة بن زيد"],
+["أسامة بن زيد","صفة دفع الحاج من عرفة","متفق عليه","هشام بن عروة|عروة بن الزبير|أسامة بن زيد"],
+["أسامة بن زيد","كثرة الفتن وتتابعها","متفق عليه","الزهري|عروة بن الزبير|أسامة بن زيد"],
+["أسامة بن زيد","تقلب المنافقين مع المسلمين","أفراد البخاري","الزهري|عروة بن الزبير|أسامة بن زيد"],
+["أسامة بن زيد","توريث بيوت مكة وحكم بيعها","متفق عليه","الزهري|علي بن الحسين|عمرو بن عثمان|أسامة بن زيد"],
+["أسامة بن زيد","صلاة العشاءين بعد الإفاضة","متفق عليه","موسى بن عقبة|كريب|أسامة بن زيد"],
+["أسامة بن زيد","ربا النسيئة","متفق عليه","سفيان بن عيينة|عمرو بن دينار|أبو صالح|أسامة بن زيد"],
+["أسيد بن حضير","الصبر عند الأثرة","متفق عليه","بندار|غندر|شعبة|قتادة|أنس بن مالك|أسيد بن حضير"],
+["الأشعث بن قيس","وعيد من اقتطع مال مسلم بيمين","متفق عليه","إسحاق بن نصر|عبد الرزاق|سفيان الثوري|منصور|أبو وائل|الأشعث بن قيس"],
+["البراء بن عازب","عذاب القبر","متفق عليه","بندار|غندر|شعبة|علقمة بن مرثد|سعد بن عبيدة|البراء بن عازب"],
+["البراء بن عازب","الدعاء عند النوم","متفق عليه","محمد بن مقاتل|عبد الله بن المبارك|سفيان الثوري|منصور|سعد بن عبيدة|البراء بن عازب"],
+["البراء بن عازب","ما يجزئ في الأضحية وسنها","متفق عليه","أبو الأحوص|منصور|الشعبي|البراء بن عازب"],
+["البراء بن عازب","ما يجزئ في الأضحية وسنها (طريق ثانٍ)","متفق عليه","بندار|غندر|شعبة|زبيد اليامي|الشعبي|البراء بن عازب"],
+["البراء بن عازب","ما يجزئ في الأضحية وسنها (طريق ثالث)","متفق عليه","بندار|غندر|شعبة|سلمة بن كهيل|أبو جحيفة|البراء بن عازب"],
+["البراء بن عازب","تحريم الحمر الأهلية","متفق عليه","عاصم الأحول|الشعبي|البراء بن عازب"],
+["البراء بن عازب","متابعة الإمام وعدم سبقه","متفق عليه","يحيى القطان|سفيان الثوري|أبو إسحاق السبيعي|عبد الله بن يزيد|البراء بن عازب"],
+["البراء بن عازب","مقدار أركان الصلاة","متفق عليه","شعبة|الحكم بن عتيبة|ابن أبي ليلى|البراء بن عازب"],
+["البراء بن عازب","القراءة في العشاء","متفق عليه","شعبة|عدي بن ثابت|البراء بن عازب"],
+["البراء بن عازب","حب الأنصار من الإيمان","متفق عليه","شعبة|عدي بن ثابت|البراء بن عازب"],
+["البراء بن عازب","مناقب الحسن بن علي","متفق عليه","شعبة|عدي بن ثابت|البراء بن عازب"],
+["البراء بن عازب","فضل الشعر في نصرة الدين","أفراد مسلم","شعبة|عدي بن ثابت|البراء بن عازب"],
+["البراء بن عازب","ربا النسيئة","متفق عليه","سفيان بن عيينة|عمرو بن دينار|أبو المنهال|البراء بن عازب"],
+["البراء بن عازب","ربا النسيئة (طريق ثانٍ)","متفق عليه","شعبة|حبيب بن أبي ثابت|أبو المنهال|البراء بن عازب"],
+["البراء بن عازب","فضل سورة الكهف","متفق عليه","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","شجاعة النبي ﷺ","متفق عليه","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","بعض صفاته ﷺ","متفق عليه","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","آخر ما نزل من القرآن","متفق عليه","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","صلح الحديبية","متفق عليه","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","فضل الجنة ونعيمها","متفق عليه","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","وأتوا البيوت من أبوابها","أفراد البخاري","أبو الوليد|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","حفر الخندق","متفق عليه","مسدد|أبو الأحوص|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","لا يستوي القاعدون من المؤمنين","أفراد البخاري","محمد بن يوسف|سفيان الثوري|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","تحويل القبلة","متفق عليه","محمد بن المثنى|يحيى القطان|سفيان الثوري|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","أمرنا بسبع ونهانا عن سبع","متفق عليه","شعبة|الأشعث بن سليم|معاوية بن سويد|البراء بن عازب"],
+["البراء بن عازب","الصلاة الوسطى صلاة العصر","أفراد مسلم","إسحاق بن إبراهيم|يحيى بن آدم|فضيل بن مرزوق|شقيق بن عقبة|البراء بن عازب"],
+["البراء بن عازب","الأجر الكثير في العمل اليسير","أفراد البخاري","محمد بن عبيد الله|زكريا بن أبي زائدة|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","وجوب الحكم بما أنزل الله","أفراد مسلم","الأعمش|عبد الله بن مرة|البراء بن عازب"],
+["البراء بن عازب","قنوت النوازل","أفراد مسلم","ابن نمير|سفيان الثوري|عمرو بن مرة|عبد الرحمن بن أبي ليلى|البراء بن عازب"],
+["البراء بن عازب","الذكر عند النوم","أفراد مسلم","شعبة|عبد الله بن أبي موسى|البراء بن عازب"]
+].map(r=>({m:r[0],t:r[1],k:r[2],c:r[3].split("|")}));
+const norm=t=>t.replace(/ \(.*\)$/,"");
+const G=new Map;D.forEach(d=>{const key=d.m+"|"+norm(d.t);if(!G.has(key))G.set(key,{m:d.m,t:norm(d.t),ks:new Set,cs:[]});const g=G.get(key);g.ks.add(d.k);g.cs.push(d.c)});
+const H=[...G.values()];
+const M=["الكل",...new Set(H.map(h=>h.m))];let cur="الكل",q="",sel=null,mode="sahabi";
+const $=id=>document.getElementById(id);
+function trie(chains){const r={k:new Map};chains.forEach(c=>{let n=r;c.forEach(x=>{if(!n.k.has(x))n.k.set(x,{k:new Map,c:0});n=n.k.get(x);n.c++})});return r}
+function rd(n){let h="";n.k.forEach((v,nm)=>{h+=v.k.size?`<details open><summary><span class="n">${nm}</span></summary>${rd(v)}</details>`:`<div class="leaf">${nm}</div>`});return h}
+function list(){
+ const f=H.filter(h=>(cur==="الكل"||h.m===cur)&&(!q||(h.t+h.cs.map(c=>c.join(" ")).join(" ")).includes(q)));
+ $("info").textContent=f.length+" حديثًا — اضغط على العنوان لترى شجرة إسناده";
+ $("main").innerHTML=f.map(h=>`<div class="h t" data-i="${H.indexOf(h)}"><b>${h.t}</b><span class="b">${[...h.ks].join(" / ")}</span><div class="ct">${h.m} · ${h.cs.length} ${h.cs.length>1?"طرق":"طريق"}</div></div>`).join("")||'<div class="hint">لا نتائج</div>'}
+function detail(){
+ const h=H[sel];
+ const ch=mode==="sahabi"?h.cs.map(c=>[...c].reverse()):h.cs;
+ let body;
+ if(mode==="lines")body=h.cs.map(c=>`<div class="h">${c.map((x,i)=>i==c.length-1?`<span class="c">${x}</span>`:x).join(' <span class="ct">←</span> ')}</div>`).join("");
+ else body=`<div class="tree">${rd(trie(ch))}</div>`;
+ const note={sahabi:"الصحابي في الأعلى ثم يتفرع إلى رواته",shaykh:"من أول راوٍ بعد الشيخين وصولًا إلى الصحابي",lines:"كل طريق في سطر مستقل"}[mode];
+ $("info").textContent="";
+ $("main").innerHTML=`<button class="tab" id="back">→ رجوع للقائمة</button><h2>${h.t}</h2><div class="ct">${h.m} · <span class="b">${[...h.ks].join(" / ")}</span></div>
+ <div class="tabs">${[["sahabi","من الصحابي"],["shaykh","من الشيخ"],["lines","سلاسل"]].map(([k,l])=>`<button class="tab${k===mode?" on":""}" data-md="${k}">${l}</button>`).join("")}</div><div class="hint">${note}</div>${body}`;
+ $("back").onclick=()=>{sel=null;page=from;show()};
+ $("main").querySelectorAll("[data-md]").forEach(b=>b.onclick=()=>{mode=b.dataset.md;detail()});
+ scrollTo(0,0)}
+let page="h",from="h",SL=[];
+const AR=' <span class="ct">←</span> ';
+function hl(c,seg){const k=seg.join("|");let a=0;for(;a<=c.length-seg.length;a++)if(c.slice(a,a+seg.length).join("|")===k)break;
+ return c.map((x,i)=>i>=a&&i<a+seg.length?`<b class="hi">${x}</b>`:x).join(AR)}
+function chains(){
+ const hs=H.map((h,i)=>({h,i})).filter(x=>cur==="الكل"||x.h.m===cur),mp=new Map;
+ hs.forEach(({h,i})=>h.cs.forEach(c=>{for(let a=0;a<c.length;a++)for(let b=a+2;b<=c.length;b++){const seg=c.slice(a,b),k=seg.join("|");let e=mp.get(k);if(!e){e={seg,k,hs:new Map};mp.set(k,e)}if(!e.hs.has(i))e.hs.set(i,[]);e.hs.get(i).push(c)}}));
+ const arr=[...mp.values()].filter(e=>e.hs.size>=2);
+ SL=arr.filter(e=>!arr.some(o=>o!==e&&o.seg.length>e.seg.length&&o.hs.size===e.hs.size&&("|"+o.k+"|").includes("|"+e.k+"|")))
+  .filter(e=>!q||e.k.includes(q)||[...e.hs.keys()].some(i=>H[i].t.includes(q)))
+  .sort((a,b)=>b.hs.size-a.hs.size||b.seg.length-a.seg.length);
+ $("info").textContent=SL.length+" سلسلة مكررة — اضغط على عنوان الحديث لترى سلسلته كاملة";
+ $("main").innerHTML=SL.map((e,g)=>`<div class="g"><div class="gh">${e.seg.join(AR)} <span class="b">${e.hs.size} أحاديث</span></div>${[...e.hs.keys()].map(i=>`<div class="h ti" data-g="${g}" data-i="${i}">${H[i].t}<span class="ct"> · ${H[i].m}</span></div><div class="full" style="display:none"></div>`).join("")}</div>`).join("")||'<div class="hint">لا نتائج</div>'}
+function toggle(el){const f=el.nextElementSibling;if(f.style.display===""){f.style.display="none";return}
+ const e=SL[+el.dataset.g],i=+el.dataset.i;
+ f.innerHTML=e.hs.get(i).filter((c,x,a)=>a.findIndex(y=>y.join()===c.join())===x).map(c=>`<div class="h">${hl(c,e.seg)}</div>`).join("")+`<button class="tab" data-open="${i}">شجرة إسناد الحديث ←</button>`;f.style.display=""}
+function refresh(){page==="h"?list():chains()}
+function show(){$("bar").style.display=sel===null?"":"none";sel===null?refresh():detail()}
+$("tabs").innerHTML=M.map(m=>`<button class="tab${m===cur?" on":""}" data-m="${m}">${m}</button>`).join("");
+$("tabs").onclick=e=>{const m=e.target.dataset.m;if(!m)return;cur=m;$("tabs").querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.m===m));refresh()};
+$("q").oninput=e=>{q=e.target.value.trim();refresh()};
+$("main").onclick=e=>{const o=e.target.closest("[data-open]"),ti=e.target.closest(".ti"),t=e.target.closest(".t");
+ if(o){from=page;sel=+o.dataset.open;show()}else if(ti)toggle(ti);else if(t){from=page;sel=+t.dataset.i;show()}};
+$("nav").onclick=e=>{const p=e.target.dataset.p;if(!p)return;page=p;$("nav").querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.p===p));$("q").placeholder=p==="h"?"ابحث باسم راوٍ أو حديث…":"ابحث باسم راوٍ في السلاسل…";refresh()};
+show();
+</script></body></html>
