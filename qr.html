@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بطاقة الباركود</title>
+<style>
+body{font-family:Tahoma,sans-serif;background:#faf7f0;color:#1f2a24;max-width:520px;margin:auto;padding:14px;text-align:center}
+input{width:100%;box-sizing:border-box;padding:10px;font-size:16px;border:1px solid #ccc;border-radius:10px;direction:ltr}
+button{margin:8px 4px;padding:10px 18px;border:0;border-radius:10px;background:#1f6b4f;color:#fff;font-size:16px}
+canvas{max-width:100%;border:1px solid #ddd;border-radius:12px;background:#fff}
+@media print{.no{display:none}body{background:#fff}}
+</style></head><body>
+<h2 class="no">صنع بطاقة باركود</h2>
+<p class="no">الصق رابط الموقع بعد رفعه على GitHub Pages</p>
+<input id="u" class="no" placeholder="https://USERNAME.github.io/REPO/">
+<div class="no"><button id="go">أنشئ البطاقة</button><button id="dl">تنزيل PNG</button><button onclick="print()">طباعة</button></div>
+<canvas id="c" width="900" height="1200"></canvas>
+<script src="qr-lib.js"></script>
+<script>
+const c=document.getElementById("c"),x=c.getContext("2d"),u=document.getElementById("u");
+function draw(){
+ const url=u.value.trim()||"https://example.github.io/asanid/";
+ const m=makeQR(url),n=m.length,W=900,H=1200;
+ x.fillStyle="#faf7f0";x.fillRect(0,0,W,H);
+ x.fillStyle="#1f6b4f";x.fillRect(0,0,W,190);
+ x.fillStyle="#fff";x.textAlign="center";x.direction="rtl";
+ x.font="bold 54px Tahoma,Arial";x.fillText("الجمع المسند",W/2,95);
+ x.font="34px Tahoma,Arial";x.fillText("شجرة الأسانيد",W/2,150);
+ const q=640,cell=Math.floor(q/(n+8)),size=cell*(n+8),ox=(W-size)/2,oy=250;
+ x.fillStyle="#fff";x.fillRect(ox-14,oy-14,size+28,size+28);
+ x.fillStyle="#111";
+ for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(m[r][k])x.fillRect(ox+(k+4)*cell,oy+(r+4)*cell,cell,cell);
+ x.fillStyle="#1f2a24";x.font="bold 40px Tahoma,Arial";x.fillText("امسح الرمز لفتح التطبيق",W/2,oy+size+90);
+ x.fillStyle="#6b756e";x.font="26px Tahoma,Arial";x.direction="ltr";
+ let t=url;while(x.measureText(t).width>W-80&&t.length>10)t=t.slice(0,-2);
+ x.fillText(t===url?url:t+"…",W/2,oy+size+150);
+}
+document.getElementById("go").onclick=()=>{try{localStorage.setItem("qrurl",u.value)}catch(e){}draw()};
+document.getElementById("dl").onclick=()=>{const a=document.createElement("a");a.download="barcode-card.png";a.href=c.toDataURL("image/png");a.click()};
+try{u.value=localStorage.getItem("qrurl")||""}catch(e){}
+draw();
+</script></body></html>
