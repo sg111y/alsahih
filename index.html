@@ -32,7 +32,7 @@ summary{cursor:pointer;padding:3px 0;list-style:none}summary::before{content:"�
 .t{cursor:pointer;padding:10px 12px}.t:active{background:var(--chip)}h2{font-size:20px;margin:10px 0 2px}.leaf{margin-right:14px;padding:1px 8px;border-right:2px solid var(--bd);color:var(--fg)}.tree{margin-top:8px}.g{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 10px;margin:10px 0}.gh{font-weight:700;color:var(--ac);margin-bottom:4px}.ti{cursor:pointer}.full{margin:0 10px 6px}.hi{color:var(--ac);background:var(--chip);border-radius:6px;padding:0 4px}</style></head><body>
 <h1>الجمع المسند بين الصحيحين</h1>
 <div class="sub">قائمة الأحاديث — اضغط على العنوان لتظهر شجرة إسناده</div>
-<div class="bar" id="bar"><div class="tabs" id="nav"><button class="tab on" data-p="h">الأحاديث</button><button class="tab" data-p="s">السلاسل</button></div><input id="q" placeholder="ابحث باسم راوٍ أو حديث…"><div class="tabs" id="tabs"></div></div>
+<div class="bar" id="bar"><div class="tabs" id="nav"><button class="tab on" data-p="h">الأحاديث</button><button class="tab" data-p="s">السلاسل</button><button class="tab" data-p="c">الصحابة عن الصحابة</button></div><input id="q" placeholder="ابحث باسم راوٍ أو حديث…"><div class="tabs" id="tabs"></div></div>
 <div class="hint" id="info"></div><div id="main"></div>
 <script>
 // [مسند, حديث, نوع, السلسلة من أول راوٍ بعد الشيخين إلى الصحابي]
@@ -72,7 +72,7 @@ const D=[
 ["البراء بن عازب","فضل الشعر في نصرة الدين","أفراد مسلم","شعبة|عدي بن ثابت|البراء بن عازب"],
 ["البراء بن عازب","ربا النسيئة","متفق عليه","سفيان بن عيينة|عمرو بن دينار|أبو المنهال|البراء بن عازب"],
 ["البراء بن عازب","ربا النسيئة (طريق ثانٍ)","متفق عليه","شعبة|حبيب بن أبي ثابت|أبو المنهال|البراء بن عازب"],
-["البراء بن عازب","فضل سورة الكهف","متفق عليه","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","فضل سورة الكهف","متفق عليه","عمرو بن خالد|زهير بن معاوية|أبو إسحاق السبيعي|البراء بن عازب"],
 ["البراء بن عازب","شجاعة النبي ﷺ","متفق عليه","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
 ["البراء بن عازب","بعض صفاته ﷺ","متفق عليه","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
 ["البراء بن عازب","آخر ما نزل من القرآن","متفق عليه","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
@@ -90,7 +90,31 @@ const D=[
 ["البراء بن عازب","الذكر عند النوم","أفراد مسلم","شعبة|عبد الله بن أبي موسى|البراء بن عازب"],
 ["البراء بن عازب","فضل الجنة ونعيمها","متفق عليه","أبو إسحاق السبيعي|البراء بن عازب","سفيان الثوري|إسرائيل|أبو الأحوص"],
 ["البراء بن عازب","متابعة الإمام وعدم سبقه","متفق عليه","أبو إسحاق السبيعي|عبد الله بن يزيد|البراء بن عازب","سفيان الثوري|شعبة|إسرائيل|زهير بن معاوية"],
-["البراء بن عازب","تحويل القبلة","متفق عليه","أبو إسحاق السبيعي|البراء بن عازب","إسرائيل|زهير بن معاوية|أبو الأحوص"]
+["البراء بن عازب","تحويل القبلة","متفق عليه","أبو إسحاق السبيعي|البراء بن عازب","إسرائيل|زهير بن معاوية|أبو الأحوص"],
+["أسامة بن زيد","نزول جبريل بصورة دحية الكلبي","أفراد البخاري","موسى بن إسماعيل|معتمر بن سليمان|سليمان التيمي|أبو عثمان النهدي|أسامة بن زيد"],
+["أسامة بن زيد","مناقب الحسن بن علي وأسامة بن زيد","أفراد البخاري","موسى بن إسماعيل|معتمر بن سليمان|سليمان التيمي|أبو عثمان النهدي|أسامة بن زيد"],
+["أسامة بن زيد","خطر من يخالف قوله فعله","متفق عليه","الأعمش|أبو وائل|أسامة بن زيد","سفيان بن عيينة|شعبة|أبو معاوية|جرير بن عبد الحميد"],
+["أسامة بن زيد","الحذر من الدخول في الفتنة بين المسلمين","أفراد البخاري","علي بن عبد الله|سفيان بن عيينة|عمرو بن دينار|حرملة مولى أسامة|أسامة بن زيد"],
+["أسامة بن زيد","كراهة العزل","أفراد مسلم","عبد الله بن يزيد المقرئ|حيوة بن شريح|عياش بن عباس|أبو النضر|عامر بن سعد|سعد بن أبي وقاص|أسامة بن زيد"],
+["أسامة بن زيد","دخول الكعبة والصلاة فيها","أفراد مسلم","ابن جريج|عطاء بن أبي رباح|ابن عباس|أسامة بن زيد"],
+["البراء بن عازب","أولاد المسلمين في الآخرة","أفراد البخاري","أبو الوليد|شعبة|عدي بن ثابت|البراء بن عازب"],
+["البراء بن عازب","نزول: وكلوا واشربوا حتى يتبين لكم الخيط الأبيض","أفراد البخاري","عبيد الله بن موسى|إسرائيل|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","نزول: علم الله أنكم كنتم تختانون أنفسكم","أفراد البخاري","عبيد الله بن موسى|إسرائيل|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","غزوة الحديبية وعلامة النبوة","أفراد البخاري","عبيد الله بن موسى|إسرائيل|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","عدة أصحاب بدر","أفراد البخاري","عمرو بن خالد|زهير بن معاوية|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","عدد غزوات النبي ﷺ","أفراد البخاري","عبد الله بن رجاء|إسرائيل|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","مقدم النبي ﷺ وأصحابه المدينة","أفراد البخاري","بندار|غندر|شعبة|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","حسن النبي ﷺ","أفراد البخاري","أبو نعيم|زهير بن معاوية|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","تحريم الخروج عن أمر الأمير في الحرب","أفراد البخاري","عمرو بن خالد|زهير بن معاوية|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","قصة مقتل أبي رافع اليهودي","أفراد البخاري","يوسف بن موسى|عبيد الله بن موسى|إسرائيل|أبو إسحاق السبيعي|البراء بن عازب"],
+["البراء بن عازب","رفع المرفقين عن الأرض في السجود","أفراد مسلم","يحيى بن يحيى|عبيد الله بن إياد|إياد بن لقيط|البراء بن عازب"],
+["البراء بن عازب","الحث على التوبة إلى الله","أفراد مسلم","يحيى بن يحيى|عبيد الله بن إياد|إياد بن لقيط|البراء بن عازب"],
+["البراء بن عازب","الذكر بعد الصلاة والوقوف يمين الصف","أفراد مسلم","مسعر|ثابت بن عبيد|عبيد بن البراء|البراء بن عازب"],
+["البراء بن عازب","قنوت النوازل","أفراد مسلم","غندر|شعبة|عمرو بن مرة|ابن أبي ليلى|البراء بن عازب"],
+["أسامة بن زيد","خطر من يخالف قوله فعله","متفق عليه","غندر|شعبة|الأعمش|أبو وائل|أسامة بن زيد"],
+["أبي بن كعب","ما جاء فيمن جامع ولم ينزل","متفق عليه","هشام بن عروة|عروة بن الزبير|أبو أيوب الأنصاري|أبي بن كعب"],
+["أبي بن كعب","فضل أبي بن كعب (قول عمر: أقرؤنا أبي)","أفراد البخاري","يحيى القطان|سفيان الثوري|حبيب بن أبي ثابت|سعيد بن جبير|ابن عباس|عمر بن الخطاب"],
+["أسامة بن زيد","صلاة العشاءين بعد الإفاضة","متفق عليه","الزهري|عبيد الله بن عبد الله|ابن عباس|أسامة بن زيد"]
 ].flatMap(r=>r[4]?r[4].split("|").map(x=>({m:r[0],t:r[1],k:r[2],c:[x,...r[3].split("|")]})):[{m:r[0],t:r[1],k:r[2],c:r[3].split("|")}]);
 const norm=t=>t.replace(/ \(.*\)$/,"");
 const G=new Map;D.forEach(d=>{const key=d.m+"|"+norm(d.t);if(!G.has(key))G.set(key,{m:d.m,t:norm(d.t),ks:new Set,cs:[]});const g=G.get(key);g.ks.add(d.k);g.cs.push(d.c)});
@@ -116,33 +140,42 @@ function detail(){
  $("back").onclick=()=>{sel=null;page=from;show()};
  $("main").querySelectorAll("[data-md]").forEach(b=>b.onclick=()=>{mode=b.dataset.md;detail()});
  scrollTo(0,0)}
-let page="h",from="h",SL=[];
+let page="h",from="h",SL=[],sub="core";
 const AR=' <span class="ct">←</span> ';
 function hl(c,seg){const k=seg.join("|");let a=0;for(;a<=c.length-seg.length;a++)if(c.slice(a,a+seg.length).join("|")===k)break;
  return c.map((x,i)=>i>=a&&i<a+seg.length?`<b class="hi">${x}</b>`:x).join(AR)}
 const PIV=new Set("أبو إسحاق السبيعي|سليمان التيمي|عاصم الأحول|عاصم بن أبي النجود|الزهري|الأعمش|عدي بن ثابت|الشعبي|سلمة بن كهيل|قتادة|هشام بن عروة|محمد بن المنكدر|موسى بن عقبة|عمرو بن دينار|حبيب بن أبي ثابت|الحكم بن عتيبة|الأشعث بن سليم|سعد بن عبيدة|عمرو بن مرة|الجريري|عبيد الله بن أبي يزيد|عطاء بن أبي رباح".split("|"));
-const FIRST=["أبو إسحاق السبيعي","سليمان التيمي"];
+const FIRST=["أبو إسحاق السبيعي","سليمان التيمي","بندار"];
+function topG(tp){const r=[...tp.values()].filter(t=>t.hs.size>=2);return r.filter(e=>!r.some(o=>o!==e&&o.seg.length>e.seg.length&&o.hs.size===e.hs.size&&("|"+o.k+"|").includes("|"+e.k+"|")))}
 function chains(){
- const mp=new Map;
+ const mp=new Map,tp=new Map;
  H.forEach((h,i)=>{if(cur!=="الكل"&&h.m!==cur)return;h.cs.forEach(c=>{let p=-1;for(let x=0;x<c.length-1;x++)if(PIV.has(c[x])){p=x;break}
   if(p<0)p=Math.max(0,c.length-2);const seg=c.slice(p),k=seg.join("|");let e=mp.get(k);if(!e){e={seg,k,hs:new Map,st:new Set};mp.set(k,e)}
-  if(!e.hs.has(i))e.hs.set(i,[]);e.hs.get(i).push(c);if(p>0)e.st.add(c[p-1])})});
+  if(!e.hs.has(i))e.hs.set(i,[]);e.hs.get(i).push(c);if(p>0)e.st.add(c[p-1]);
+  for(let a=0;a<p;a++)for(let b=a+2;b<=p;b++){const pre=c.slice(a,b),k2=pre.join("|");let t=tp.get(k2);if(!t){t={seg:pre,k:k2,hs:new Map,st:new Set};tp.set(k2,t)}if(!t.hs.has(i))t.hs.set(i,[]);t.hs.get(i).push(c);t.st.add(c[b])}})});
  const pr=e=>{const j=FIRST.indexOf(e.seg[0]);return j<0?9:j};
- SL=[...mp.values()].filter(e=>!q||e.k.includes(q)||[...e.st].some(x=>x.includes(q))||[...e.hs.values()].some(cs=>cs.some(c=>c.join(" ").includes(q)))||[...e.hs.keys()].some(i=>H[i].t.includes(q)))
+ SL=[...(sub==="top"?topG(tp):[...mp.values()].filter(t=>t.hs.size>=2))].filter(e=>!q||e.k.includes(q)||[...e.st].some(x=>x.includes(q))||[...e.hs.values()].some(cs=>cs.some(c=>c.join(" ").includes(q)))||[...e.hs.keys()].some(i=>H[i].t.includes(q)))
   .sort((a,b)=>pr(a)-pr(b)||b.hs.size-a.hs.size||b.seg.length-a.seg.length);
- $("info").textContent=SL.length+" سلسلة — لكل سلسلة راويها المدار وأصحابه، واضغط على عنوان الحديث لترى سلسلته كاملة";
- $("main").innerHTML=SL.map((e,g)=>`<div class="g"><div class="gh">${e.seg.join(AR)} <span class="b">${e.hs.size} ${e.hs.size>10?"حديثًا":"أحاديث"}</span></div>${e.st.size?`<div class="ct">أصحابه عنه: ${[...e.st].map(x=>`<span class="chip">${x}</span>`).join("")}</div>`:""}${[...e.hs.keys()].map(i=>`<div class="h ti" data-g="${g}" data-i="${i}">${H[i].t}<span class="ct"> · ${H[i].m}</span></div><div class="full" style="display:none"></div>`).join("")}</div>`).join("")||'<div class="hint">لا نتائج</div>'}
+ $("info").textContent=SL.length+(sub==="top"?" سلسلة من أعلى السند (المكررة) — اضغط على عنوان الحديث لترى سلسلته كاملة":" سلسلة — لكل سلسلة راويها المدار وأصحابه، واضغط على عنوان الحديث لترى سلسلته كاملة");
+ $("main").innerHTML=`<div class="tabs"><button class="tab${sub==="core"?" on":""}" data-sub="core">المدارات وأصحابهم</button><button class="tab${sub==="top"?" on":""}" data-sub="top">أعلى السند (بندار ← غندر ← شعبة)</button></div>`+SL.map((e,g)=>`<div class="g"><div class="gh">${e.seg.join(AR)} <span class="b">${e.hs.size} ${e.hs.size>10?"حديثًا":"أحاديث"}</span></div>${e.st.size?`<div class="ct">${sub==="top"?"ثم عن":"أصحابه عنه"}: ${[...e.st].map(x=>`<span class="chip">${x}</span>`).join("")}</div>`:""}${[...e.hs.keys()].map(i=>`<div class="h ti" data-g="${g}" data-i="${i}">${H[i].t}<span class="ct"> · ${H[i].m}</span></div><div class="full" style="display:none"></div>`).join("")}</div>`).join("")||'<div class="hint">لا نتائج</div>'}
 function toggle(el){const f=el.nextElementSibling;if(f.style.display===""){f.style.display="none";return}
  const e=SL[+el.dataset.g],i=+el.dataset.i;
  f.innerHTML=e.hs.get(i).filter((c,x,a)=>a.findIndex(y=>y.join()===c.join())===x).map(c=>`<div class="h">${hl(c,e.seg)}</div>`).join("")+`<button class="tab" data-open="${i}">شجرة إسناد الحديث ←</button>`;f.style.display=""}
-function refresh(){page==="h"?list():chains()}
+const CS=new Set("ابن عباس|أبي بن كعب|أسامة بن زيد|البراء بن عازب|سعد بن أبي وقاص|أبو جحيفة|أبو أيوب الأنصاري|أنس بن مالك|أسيد بن حضير|عمر بن الخطاب|عبد الله بن يزيد".split("|"));
+function comp(){
+ const mp=new Map;
+ H.forEach((h,i)=>{if(cur!=="الكل"&&h.m!==cur)return;h.cs.forEach(c=>{for(let x=0;x<c.length-1;x++)if(CS.has(c[x])&&CS.has(c[x+1])){const seg=[c[x],c[x+1]],k=seg.join("|");let e=mp.get(k);if(!e){e={seg,k,hs:new Map,st:new Set};mp.set(k,e)}if(!e.hs.has(i))e.hs.set(i,[]);e.hs.get(i).push(c)}})});
+ SL=[...mp.values()].filter(e=>!q||e.k.includes(q)||[...e.hs.keys()].some(i=>H[i].t.includes(q))).sort((a,b)=>b.hs.size-a.hs.size);
+ $("info").textContent=SL.length+" رواية صحابي عن صحابي — اضغط على عنوان الحديث لترى سلسلته كاملة";
+ $("main").innerHTML=SL.map((e,g)=>`<div class="g"><div class="gh">${e.seg.join(AR)} <span class="b">${e.hs.size==1?"حديث":e.hs.size==2?"حديثان":e.hs.size+" أحاديث"}</span></div><div class="ct">الراوي: ${e.seg[0]} — المروي عنه: ${e.seg[1]}</div>${[...e.hs.keys()].map(i=>`<div class="h ti" data-g="${g}" data-i="${i}">${H[i].t}<span class="ct"> · ${H[i].m}</span></div><div class="full" style="display:none"></div>`).join("")}</div>`).join("")||'<div class="hint">لا نتائج</div>'}
+function refresh(){page==="h"?list():page==="s"?chains():comp()}
 function show(){$("bar").style.display=sel===null?"":"none";sel===null?refresh():detail()}
 $("tabs").innerHTML=M.map(m=>`<button class="tab${m===cur?" on":""}" data-m="${m}">${m}</button>`).join("");
 $("tabs").onclick=e=>{const m=e.target.dataset.m;if(!m)return;cur=m;$("tabs").querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.m===m));refresh()};
 $("q").oninput=e=>{q=e.target.value.trim();refresh()};
-$("main").onclick=e=>{const o=e.target.closest("[data-open]"),ti=e.target.closest(".ti"),t=e.target.closest(".t");
+$("main").onclick=e=>{const sb=e.target.closest("[data-sub]");if(sb){sub=sb.dataset.sub;chains();return}const o=e.target.closest("[data-open]"),ti=e.target.closest(".ti"),t=e.target.closest(".t");
  if(o){from=page;sel=+o.dataset.open;show()}else if(ti)toggle(ti);else if(t){from=page;sel=+t.dataset.i;show()}};
-$("nav").onclick=e=>{const p=e.target.dataset.p;if(!p)return;page=p;$("nav").querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.p===p));$("q").placeholder=p==="h"?"ابحث باسم راوٍ أو حديث…":"ابحث باسم راوٍ في السلاسل…";refresh()};
+$("nav").onclick=e=>{const p=e.target.dataset.p;if(!p)return;page=p;$("nav").querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.p===p));$("q").placeholder=p==="h"?"ابحث باسم راوٍ أو حديث…":"ابحث باسم راوٍ أو حديث…";refresh()};
 show();
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script></body></html>
