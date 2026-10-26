@@ -1,4 +1,4 @@
-const CACHE = "asanid-v8";
+const CACHE = "asanid-v11";
 const FILES = ["./", "./index.html", "./manifest.json", "./qr.html", "./qr-lib.js",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png",
   "./icons/apple-touch-icon.png", "./icons/favicon.png"];
