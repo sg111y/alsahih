@@ -1,23 +1,12 @@
-const CACHE = "asanid-v13";
-const FILES = ["./", "./index.html", "./manifest.json", "./qr.html", "./qr-lib.js",
-  "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png",
-  "./icons/apple-touch-icon.png", "./icons/favicon.png"];
-self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
+// غيّر رقم الإصدار عند كل رفع جديد ليظهر تنبيه التحديث
+const VERSION="1.0.0";
+const CACHE="musnad-"+VERSION;
+const FILES=["./","index.html","data.js","manifest.json","icons/icon-192.png","icons/icon-512.png"];
+self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)))});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
+self.addEventListener("message",e=>{if(e.data==="skip")self.skipWaiting()});
+self.addEventListener("fetch",e=>{
+ const u=new URL(e.request.url);
+ if(u.pathname.endsWith("announcements.json")||u.pathname.endsWith("version.json")){e.respondWith(fetch(e.request,{cache:"no-store"}).catch(()=>caches.match(e.request)));return}
+ e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));
 });
-self.addEventListener("activate", e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
-});
-// الشبكة أولًا (لتصل التحديثات فورًا)، ثم النسخة المخزنة عند انقطاع الإنترنت
-self.addEventListener("fetch", e => {
-  if (e.request.method !== "GET") return;
-  e.respondWith(
-    fetch(e.request, { cache: "no-cache" }).then(res => {
-      const copy = res.clone();
-      caches.open(CACHE).then(c => c.put(e.request, copy));
-      return res;
-    }).catch(() => caches.match(e.request).then(r => r || caches.match("./index.html")))
-  );
-});
-
-self.addEventListener("message", e => { if (e.data && e.data.type === "SKIP") self.skipWaiting(); });
