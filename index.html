@@ -153,7 +153,7 @@ const $=id=>document.getElementById(id);
 function trie(chains){const r={k:new Map};chains.forEach(c=>{let n=r;c.forEach(x=>{if(!n.k.has(x))n.k.set(x,{k:new Map,c:0});n=n.k.get(x);n.c++})});return r}
 function rd(n){let h="";n.k.forEach((v,nm)=>{h+=v.k.size?`<details open><summary><span class="n">${nm}</span></summary>${rd(v)}</details>`:`<div class="leaf">${nm}</div>`});return h}
 const lsget=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsset=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
-const VER="v17";
+
 let FV=new Set(JSON.parse(lsget("fv")||"[]"));const saveFV=()=>lsset("fv",JSON.stringify([...FV]));
 const key=h=>h.m+"|"+h.t,matnOf=h=>MT2[key(h)]||MT[h.t];
 const UNREV=new Set(["أبي بن كعب|فتنة المال", "أبي بن كعب|من الشعر حكمة", "أبي بن كعب|أنزل القرآن على سبعة أحرف", "أبي بن كعب|فضل كثرة الخطا إلى المساجد", "أبي بن كعب|تفسير: ولنذيقنهم من العذاب الأدنى", "أسيد بن حضير|نزول الملائكة والسكينة عند قراءة القرآن", "الأغر المزني|فضل الاستغفار", "أهبان بن أوس|وضع الوسادة تحت ركبته في الصلاة لحاجة", "إياس بن ثعلبة|الوعيد الشديد لمن اقتطع حق مسلم بيمين", "البراء بن عازب|كم اعتمر النبي ﷺ", "البراء بن عازب|بعث علي وخالد إلى اليمن", "البراء بن عازب|فضل الصحبة وعدم الاغترار بالعمل"]),UR=h=>UNREV.has(key(h))?'<span class="b" style="background:#f0be5a;color:#1f2a24">غير مراجع</span>':"";
@@ -213,7 +213,7 @@ function narrator(){
  ${st.size?`<div class="g"><div class="gh">رووا عنه</div>${[...st].map(chip).join("")}</div>`:""}
  <div class="gh" style="margin-top:10px">أحاديثه</div>`+hs.map(([h,i])=>card(h,i,null)).join("");scrollTo(0,0)}
 function about(){const nm=H.filter(matnOf).length;$("info").textContent="";
- $("main").innerHTML=`<div class="g"><div class="gh">عن التطبيق</div><p>تطبيق لاستعراض أسانيد أحاديث «الجمع المسند بين الصحيحين بالأسانيد» وشجراتها وسلاسلها ومداراتها.</p><p class="ct">المدار مستنتج من الأسانيد الموجودة في التطبيق، وليس نقلًا من عبارة الكتاب.</p><div class="ct">النسخة ${VER} · ${H.length} حديثًا · ${nm} منها بمتونها</div></div>
+ $("main").innerHTML=`<div class="g"><div class="gh">عن التطبيق</div><p>تطبيق لاستعراض أسانيد أحاديث «الجمع المسند بين الصحيحين بالأسانيد» وشجراتها وسلاسلها ومداراتها.</p><p class="ct">المدار مستنتج من الأسانيد الموجودة في التطبيق، وليس نقلًا من عبارة الكتاب.</p><div class="ct">${H.length} حديثًا · ${nm} منها بمتونها</div></div>
  <div class="g"><div class="gh">التثبيت</div>${dp?'<button class="tab" id="ib2">ثبّت التطبيق</button>':""}<p class="ct">آيفون: اضغط «مشاركة» في Safari ثم «إضافة إلى الشاشة الرئيسية». أندرويد: من قائمة Chrome اختر «تثبيت التطبيق».</p></div>`}
 let page="h",SL=[],sub="core",narr=null,ft="الكل",fm="",dp=null,HS=false;
 const AR=' <span class="ct">←</span> ';
@@ -222,11 +222,14 @@ function hl(c,seg){const k=seg.join("|");let a=0;for(;a<=c.length-seg.length;a++
 const PIV=new Set("أبو إسحاق السبيعي|سليمان التيمي|عاصم الأحول|عاصم بن أبي النجود|الزهري|الأعمش|عدي بن ثابت|الشعبي|سلمة بن كهيل|قتادة|هشام بن عروة|محمد بن المنكدر|موسى بن عقبة|عمرو بن دينار|حبيب بن أبي ثابت|الحكم بن عتيبة|الأشعث بن سليم|سعد بن عبيدة|عمرو بن مرة|الجريري|عبيد الله بن أبي يزيد|عطاء بن أبي رباح".split("|"));
 const FIRST=["أبو إسحاق السبيعي","سليمان التيمي","بندار"];
 function topG(tp){const r=[...tp.values()].filter(t=>t.hs.size>=2);return r.filter(e=>!r.some(o=>o!==e&&o.seg.length>e.seg.length&&o.hs.size===e.hs.size&&("|"+o.k+"|").includes("|"+e.k+"|")))}
+// سلاسل إضافية تجمع الأحاديث عند الراوي الذي يروي عنه الصحابي مباشرة
+const TAIL=new Set(["عروة بن الزبير|أسامة بن زيد"]);
 function chains(){
  const mp=new Map,tp=new Map;
  H.forEach((h,i)=>{if(cur!=="الكل"&&h.m!==cur)return;h.cs.forEach(c=>{let p=-1;for(let x=0;x<c.length-1;x++)if(PIV.has(c[x])){p=x;break}
   if(p<0)p=Math.max(0,c.length-2);const seg=c.slice(p),k=seg.join("|");let e=mp.get(k);if(!e){e={seg,k,hs:new Map,st:new Set};mp.set(k,e)}
   if(!e.hs.has(i))e.hs.set(i,[]);e.hs.get(i).push(c);if(p>0)e.st.add(c[p-1]);
+  const t2=c.slice(-2).join("|");if(TAIL.has(t2)&&c.length>2&&p!==c.length-2){let e2=mp.get(t2);if(!e2){e2={seg:c.slice(-2),k:t2,hs:new Map,st:new Set};mp.set(t2,e2)}if(!e2.hs.has(i))e2.hs.set(i,[]);e2.hs.get(i).push(c);e2.st.add(c[c.length-3])}
   for(let a=0;a<p;a++)for(let b=a+2;b<=p;b++){const pre=c.slice(a,b),k2=pre.join("|");let t=tp.get(k2);if(!t){t={seg:pre,k:k2,hs:new Map,st:new Set};tp.set(k2,t)}if(!t.hs.has(i))t.hs.set(i,[]);t.hs.get(i).push(c);t.st.add(c[b])}})});
  const pr=e=>{const j=FIRST.indexOf(e.seg[0]);return j<0?9:j};
  SL=[...(sub==="top"?topG(tp):[...mp.values()].filter(t=>t.hs.size>=2))].filter(e=>!q||e.k.includes(q)||[...e.st].some(x=>x.includes(q))||[...e.hs.values()].some(cs=>cs.some(c=>c.join(" ").includes(q)))||[...e.hs.keys()].some(i=>H[i].t.includes(q)))
@@ -311,7 +314,7 @@ let fs=+(lsget("fs")||20);const setFs=()=>{root.style.setProperty("--mf",fs+"px"
 $("fp").onclick=()=>{fs=Math.min(36,fs+2);setFs();toast("حجم المتن "+fs)};$("fm").onclick=()=>{fs=Math.max(14,fs-2);setFs();toast("حجم المتن "+fs)};
 // التحديث والتثبيت
 const ban=h=>{$("ban").innerHTML=h};
-window.showUpd=()=>{ban('<div class="ban">يوجد تحديث جديد للتطبيق <button id="ub">حدّث الآن</button></div>');$("ub").onclick=()=>{window.__upd&&window.__upd.postMessage({type:"SKIP"})}};
+window.showUpd=()=>{ban('<div class="ban">يتوفر إصدار جديد — <button id="ub">تحديث الآن</button></div>');$("ub").onclick=applyUpd};
 addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;ban('<div class="ban">ثبّت التطبيق على جهازك <button id="ib">تثبيت</button><button id="ix">×</button></div>');$("ib").onclick=()=>dp.prompt();$("ix").onclick=()=>ban("")});
 if(/iphone|ipad/i.test(navigator.userAgent)&&!navigator.standalone&&!lsget("ih")){ban('<div class="ban">للتثبيت على الآيفون: اضغط «مشاركة» ثم «إضافة إلى الشاشة الرئيسية» <button id="ix">×</button></div>');$("ix").onclick=()=>{lsset("ih","1");ban("")}}
 // إعلانات للمستخدمين: عدّل announcements.json وغيّر id لتظهر من جديد
@@ -319,5 +322,14 @@ fetch("announcements.json",{cache:"no-store"}).then(r=>r.json()).then(a=>{if(!a|
 $("ann").innerHTML='<div class="ban"><div><b>'+(a.title||"")+'</b> '+(a.text||"")+'</div><button id="ax">إغلاق</button></div>';
 $("ax").onclick=()=>{lsset("ann",a.id);$("ann").innerHTML=""}}).catch(()=>{});
 sv();show();
-if("serviceWorker"in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").then(r=>{const w=x=>{window.__upd=x;window.showUpd&&window.showUpd()};if(r.waiting&&navigator.serviceWorker.controller)w(r.waiting);r.addEventListener("updatefound",()=>{const n=r.installing;n.addEventListener("statechange",()=>{if(n.state==="installed"&&navigator.serviceWorker.controller)w(n)})})}).catch(()=>{}));let rl=0;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(rl)return;rl=1;location.reload()})}
+const CORE_FILES=["index.html","manifest.json","qr.html","qr-lib.js"];
+async function readAll(get){let s="";for(const f of CORE_FILES){const r=await get(f);if(!r||!r.ok&&r.ok!==undefined)return null;s+=await r.text()+"\u0000"}return s}
+let upBusy=0;
+async function chk(){if(upBusy||!navigator.onLine||!window.caches)return;upBusy=1;try{const c=await caches.open("asanid-cache");
+ const a=await readAll(f=>c.match(f));if(!a)return;
+ const b=await readAll(f=>fetch(f,{cache:"no-store"}));if(b&&a!==b)window.showUpd()}catch(e){}finally{upBusy=0}}
+async function applyUpd(){const btn=$("ub");if(btn){btn.disabled=true;btn.textContent="جارٍ التحديث…"}
+ try{const c=await caches.open("asanid-cache");for(const f of CORE_FILES){const r=await fetch(f,{cache:"no-store"});if(r.ok){await c.put(f,r.clone());if(f==="index.html")await c.put("./",r.clone())}}}catch(e){}
+ location.reload()}
+if("serviceWorker"in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").then(()=>{setTimeout(chk,4000);setInterval(chk,1800000);document.addEventListener("visibilitychange",()=>{document.visibilityState==="visible"&&chk()});addEventListener("online",chk)}).catch(()=>{}))}
 </script></body></html>
