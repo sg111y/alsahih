@@ -42,9 +42,10 @@ mark{background:#f0be5a;color:#1f2a24;border-radius:4px;padding:0 2px}.sn{font-s
 </style></head><body>
 <div id="ann"></div><div id="ban"></div><div class="top"><h1>الجمع المسند بين الصحيحين</h1><div class="tools"><button id="bt" class="tb" title="الوضع الليلي">◐</button><button id="fm" class="tb" title="تصغير الخط">أ−</button><button id="fp" class="tb" title="تكبير الخط">أ+</button></div></div>
 <div class="sub">قائمة الأحاديث — اضغط على العنوان لتظهر شجرة إسناده</div>
-<div class="bar" id="bar"><div class="tabs" id="nav"><button class="tab on" data-p="h">الأحاديث</button><button class="tab" data-p="s">السلاسل</button><button class="tab" data-p="c">الصحابة عن الصحابة</button><button class="tab" data-p="f">★ المفضلة</button><button class="tab" data-p="a">عن التطبيق</button></div><input id="q" placeholder="ابحث باسم راوٍ أو حديث…"><div class="tabs" id="tabs"></div></div>
+<div class="bar" id="bar"><div class="tabs" id="nav"><button class="tab on" data-p="h">الأحاديث</button><button class="tab" data-p="r">الرواة</button><button class="tab" data-p="s">السلاسل</button><button class="tab" data-p="c">الصحابة عن الصحابة</button><button class="tab" data-p="f">★ المفضلة</button><button class="tab" data-p="a">عن التطبيق</button></div><input id="q" placeholder="ابحث باسم راوٍ أو حديث…"><div class="tabs" id="tabs"></div></div>
 <div class="hint" id="info"></div><div id="main"></div>
 <div id="toast"></div>
+<script src="rawi.js"></script>
 <script>
 // [مسند, حديث, نوع, السلسلة من أول راوٍ بعد الشيخين إلى الصحابي]
 const D=[
@@ -205,7 +206,31 @@ function detail(){
  scrollTo(0,0)}
 // بطاقة الراوي من ملف «ملخص رواة السنة» (الطبقة والحكم والوفاة)
 const RW={"هشام بن عروة":{"t":"الخامسة","h":["ثقة","فقيه"],"d":"١٤٥ هـ"},"عروة بن الزبير":{"t":"الثالثة","h":["ثقة"],"d":"٩٤ هـ"},"أبو أيوب الأنصاري":{"t":"الأولى (الصحابة)","h":["صحابي"],"d":"٥٠ هـ"},"أبي بن كعب":{"t":"الأولى (الصحابة)","h":["صحابي"]},"بندار":{"t":"العاشرة","h":["ثقة"],"d":"٢٥٢ هـ"},"غندر":{"t":"التاسعة","h":["ثقة"],"d":"١٩٣ هـ"},"شعبة":{"t":"السابعة","d":"١٦٠ هـ"},"سفيان بن عيينة":{"t":"الثامنة","d":"١٩٨ هـ"},"عمرو بن دينار":{"t":"الرابعة","h":["ثقة","ثبت"],"d":"١٢٦ هـ"},"سعيد بن جبير":{"t":"الثالثة","h":["ثقة","ثبت","فقيه"]},"ابن عباس":{"t":"الأولى (الصحابة)","h":["صحابي"],"d":"٦٨ هـ"},"الزهري":{"t":"الرابعة","d":"١٢٤ هـ"},"عبيد الله بن عبد الله بن عتبة":{"t":"الثالثة","h":["ثقة","ثبت"],"d":"٩٤ هـ"},"حماد بن سلمة":{"t":"الثامنة","d":"١٦٧ هـ"},"ثابت البناني":{"t":"الرابعة","h":["ثقة","عابد","ضعيف"],"d":"١٢٧ هـ"},"أنس بن مالك":{"t":"الأولى (الصحابة)","h":["صحابي"],"d":"٩٣ هـ"},"علي بن المديني":{"t":"العاشرة","d":"٢٣٤ هـ"},"عاصم بن أبي النجود":{"t":"السادسة","h":["صدوق","حجة"],"d":"١٢٨ هـ"},"زر بن حبيش":{"t":"الثانية","h":["ثقة","جليل","مخضرم"],"d":"٨٢ هـ"},"أبو اليمان":{"t":"العاشرة","d":"٢٢٢ هـ"},"شعيب":{"t":"السابعة","d":"١٦٢ هـ"},"أبو بكر بن عبد الرحمن":{"t":"الثالثة","h":["ثقة","فقيه","عابد"],"d":"٩٤ هـ"},"عبد الرحمن بن الأسود":{"t":"الثالثة","h":["ثقة"],"d":"٩٩ هـ"},"يحيى القطان":{"t":"التاسعة","d":"١٩٨ هـ"},"سفيان الثوري":{"t":"السابعة","d":"١٦١ هـ"},"عمر بن الخطاب":{"t":"الأولى (الصحابة)","h":["صحابي"]},"محمد بن حاتم":{"t":"العاشرة"},"أبو بكر بن أبي شيبة":{"t":"العاشرة","d":"٢٣٥ هـ"},"الجريري":{"t":"الخامسة","h":["ثقة","اختلط"],"d":"١٤٤ هـ"},"محمد بن عبد الله بن نمير":{"t":"العاشرة","d":"٢٣٤ هـ"},"عبد الله بن نمير":{"t":"التاسعة"},"إسماعيل بن أبي خالد":{"t":"الرابعة","h":["ثقة","ثبت"]},"عبد الرحمن بن أبي ليلى":{"t":"الثانية","h":["ثقة"],"d":"٨٣ هـ"},"يحيى بن يحيى":{"t":"العاشرة","d":"٢٢٦ هـ"},"سليمان التيمي":{"t":"الرابعة","h":["ثقة","عابد"],"d":"١٤٣ هـ"},"أبو عثمان النهدي":{"t":"الثانية","h":["ثقة","ثبت","عابد","مخضرم"],"d":"٩٥ هـ"},"محمد بن المثنى":{"t":"العاشرة"},"قتادة":{"t":"الرابعة","h":["ثقة","ثبت"],"d":"١١٧ هـ"},"عامر بن سعد":{"t":"الثالثة","h":["ثقة"],"d":"١٠٤ هـ"},"أسامة بن زيد":{"t":"الأولى (الصحابة)","h":["صحابي"],"d":"٥٤ هـ"},"محمد بن المنكدر":{"t":"الثالثة","h":["ثقة","فاضل"],"d":"١٣٠ هـ"},"الأعمش":{"t":"الخامسة","h":["ثقة","حافظ"],"d":"١٤٧ هـ"},"أبو وائل":{"t":"الثانية","h":["ثقة","مخضرم"],"d":"٨٢ هـ"},"أبو معاوية":{"t":"التاسعة"},"جرير بن عبد الحميد":{"t":"الثامنة","d":"١٨٨ هـ"},"عطاء بن أبي رباح":{"t":"الثالثة","d":"١١٤ هـ"},"عاصم الأحول":{"t":"الرابعة","h":["ثقة"],"d":"بعد ١٤٠ هـ"},"إسرائيل":{"t":"السابعة","d":"١٦٠ هـ"},"ابن المبارك":{"t":"الثامنة","d":"١٨١ هـ"},"حماد بن زيد":{"t":"الثامنة","d":"١٧٩ هـ"},"عبد الواحد بن زياد":{"t":"الثامنة","h":["ثقة"],"d":"١٧٦ هـ"},"محمد بن فضيل":{"t":"التاسعة","d":"١٩٥ هـ"},"هشيم بن بشير":{"t":"السابعة","h":["ثقة","ثبت"],"d":"١٨٣ هـ"},"أبو خالد الأحمر":{"t":"الثامنة","d":"١٩٠ هـ"},"ابن علية":{"t":"الثامنة","d":"١٩٣ هـ"},"معاذ بن معاذ":{"t":"التاسعة","d":"١٩٦ هـ"},"يزيد بن زريع":{"t":"الثامنة"},"موسى بن إسماعيل":{"t":"التاسعة","d":"٢٢٣ هـ"},"علي بن الحسين":{"t":"الثالثة","h":["ثقة","ثبت","عابد","فقيه","فاضل"],"d":"٩٣ هـ"},"موسى بن عقبة":{"t":"الخامسة","h":["ثقة","فقيه","إمام"],"d":"١٤١ هـ"},"كريب":{"t":"الثالثة","h":["ثقة"],"d":"٩٨ هـ"},"عبيد الله بن عبد الله":{"t":"الثالثة","h":["ثقة","ثبت"],"d":"٩٤ هـ"},"سعد بن أبي وقاص":{"t":"الأولى (الصحابة)","h":["صحابي"],"d":"٥٥ هـ"},"ابن جريج":{"t":"السادسة","h":["ثقة","فقيه","فاضل"],"d":"١٥٠ هـ"},"أبو سعيد الخدري":{"t":"الأولى (الصحابة)","h":["صحابي"],"d":"٧٤ هـ"},"عمرو بن مرة":{"t":"الخامسة","h":["ثقة","عابد"],"d":"١١٦ هـ"},"أبو بردة":{"t":"الثالثة","h":["ثقة"],"d":"١٠٤ هـ"},"إسماعيل بن جعفر":{"t":"الثامنة","d":"١٨٠ هـ"},"العلاء بن عبد الرحمن":{"t":"الخامسة","h":["صدوق"]},"علقمة بن مرثد":{"t":"السادسة","h":["ثقة"],"d":"١٢٠ هـ"},"سعد بن عبيدة":{"t":"الثالثة","h":["ثقة"]},"البراء بن عازب":{"t":"الأولى (الصحابة)","h":["صحابي"],"d":"٧٢ هـ"},"عبد الله بن المبارك":{"t":"الثامنة","d":"١٨١ هـ"},"منصور":{"t":"الخامسة","h":["ثقة","ثبت"],"d":"١٣٢ هـ"},"أبو الأحوص":{"t":"السابعة","h":["ثقة","متقن"],"d":"١٧٧ هـ"},"الشعبي":{"t":"الثالثة","h":["ثقة","فقيه","فاضل","ضعيف"],"d":"بعد ١٠٠ هـ"},"أبو إسحاق السبيعي":{"t":"الثالثة","h":["ثقة","مكثر","عابد","اختلط"],"d":"١٢٩ هـ"},"زهير بن معاوية":{"t":"السابعة","d":"١٧٣ هـ"},"الحكم بن عتيبة":{"t":"الخامسة"},"عدي بن ثابت":{"t":"الرابعة","h":["ثقة"],"d":"١١٦ هـ"},"مسدد":{"t":"العاشرة","d":"٢٢٨ هـ"},"زكريا بن أبي زائدة":{"t":"السادسة","h":["ثقة","يدلس"],"d":"١٤٧ هـ"},"أبو عوانة":{"t":"السابعة","h":["ثقة","ثبت"],"d":"١٧٥ هـ"},"عبيد الله بن موسى":{"t":"التاسعة","d":"٢١٣ هـ"},"أبو نعيم":{"t":"التاسعة","d":"٢١٨ هـ"},"يحيى بن آدم":{"t":"التاسعة"},"عبد الله بن مرة":{"t":"الثالثة","h":["ثقة"],"d":"١٠٠ هـ"},"مسعر":{"t":"السابعة","d":"١٥٥ هـ"}};
-const rwb=n=>{const r=RW[n];return r?`<div class="g"><div class="gh">من ملخص الرواة</div><div class="ct">الطبقة: <b>${r.t}</b>${r.h?` · الحكم: <b>${r.h.join("، ")}</b>`:""}${r.d?` · الوفاة: <b>${r.d}</b>`:""}</div><div class="ct">مأخوذة من ملخص رواة السنة، وقد تنقص بعض العبارات لتشوّه النص المستخرج</div></div>`:""};
+const rwb=n=>{const r=RW[n];return r?`<div class="g"><div class="gh">من ملخص الرواة${RMAP[n]!==undefined?` <button class="chip" data-r="${RMAP[n]}">الترجمة كاملة</button>`:""}</div><div class="ct">الطبقة: <b>${r.t}</b>${r.h?` · الحكم: <b>${r.h.join("، ")}</b>`:""}${r.d?` · الوفاة: <b>${r.d}</b>`:""}</div><div class="ct">مأخوذة من ملخص رواة السنة، وقد تنقص بعض العبارات لتشوّه النص المستخرج</div></div>`:""};
+
+// ===== خانة الرواة: كل الطبقات من «ملخص رواة السنة» =====
+const TBL=["","الأولى (الصحابة)","الثانية","الثالثة","الرابعة","الخامسة","السادسة","السابعة","الثامنة","التاسعة","العاشرة","الحادية عشرة","الثانية عشرة"];
+const REX=new Set(),rnorm=s=>s.replace(/[\u064B-\u065F\u0670\u0640]/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/\s+/g," ").trim();
+const RN=RAWI.map(o=>rnorm(o.n)),RREV={};Object.keys(RMAP).forEach(k=>RREV[RMAP[k]]=k);
+const rrow=i=>{const o=RAWI[i];return `<div class="h rr" data-r="${i}"><b>${o.n}</b> <span class="ct">· الطبقة ${TBL[o.t]}${o.d?` · ${o.d}`:""}${o.h?` · ${o.h.slice(0,3).join("، ")}`:""}</span></div>`};
+function rawi(){$("info").textContent="";const s=rnorm(q||"");let h="";
+ if(s){const a=[],b=[];RAWI.forEach((o,i)=>{if(RN[i].includes(s))a.push(i);else if((o.r||[]).some(x=>rnorm(x).includes(s)))b.push(i)});
+  h=`<div class="gh">نتائج البحث (${a.length})</div>`+(a.map(rrow).join("")||'<div class="hint">لا يوجد راوٍ بهذا الاسم في الملخص</div>')+(b.length?`<div class="gh" style="margin-top:10px">وردت أسماؤهم عند من يروون عنهم (${b.length})</div>`+b.map(rrow).join(""):"")}
+ else{h=`<div class="hint">${RAWI.length} راويًا في ${TBL.length-1} طبقة — اضغط على الطبقة لتفتح، أو ابحث بالاسم في الأعلى (يشمل من لم يرو حديثًا في التطبيق)</div>`;
+  for(let t=1;t<TBL.length;t++){const ix=RAWI.map((o,i)=>o.t===t?i:-1).filter(i=>i>=0),on=REX.has(t);
+   h+=`<div class="g"><div class="gh" data-rt="${t}" style="cursor:pointer">${on?"▾":"◂"} الطبقة ${TBL[t]} <span class="ct">· ${ix.length}</span></div>${on?ix.map(rrow).join(""):""}</div>`}}
+ $("main").innerHTML=h}
+function rawiD(){const i=rsel,o=RAWI[i];$("info").textContent="";
+ const app=RREV[i],cnt=app?H.filter(h=>h.cs.some(c=>c.includes(app))).length:0;
+ const shy=[];RAWI.forEach((p,j)=>{if(p.ri&&p.ri.includes(i))shy.push(j)});
+ const lk=(n,j)=>j>=0?`<button class="chip" data-r="${j}">${n}</button>`:`<span class="chip">${n}</span>`;
+ $("main").innerHTML=`<button class="tab" data-bk>→ رجوع</button><h2>${o.n}</h2>
+ <div class="ct">الطبقة: <b>${TBL[o.t]}</b>${o.h?` · الحكم: <b>${o.h.join("، ")}</b>`:""}${o.d?` · الوفاة: <b>${o.d}</b>`:""}</div>
+ ${cnt?`<div class="g"><div class="gh">في التطبيق</div><button class="chip" data-n="${app}">${cnt} ${cnt>10?"حديثًا":"أحاديث"} — اعرضها</button></div>`:`<div class="ct">لا حديث له في التطبيق حاليًا</div>`}
+ <div class="g"><div class="gh">الترجمة</div><div class="mt">${o.x}</div><div class="ct">النص مستخرج من ملف ملخص رواة السنة وفيه تشويه في بعض الحروف، فراجع الكتاب عند الاقتباس</div></div>
+ ${o.r?`<div class="g"><div class="gh">الرواة عنه</div>${o.r.map((n,k)=>lk(n,o.ri[k])).join("")}</div>`:""}
+ ${o.u?`<div class="g"><div class="gh">أسماء وردت ولم تُقرأ جيدًا</div><div class="ct">${o.u.join(" · ")}</div></div>`:""}
+ ${shy.length?`<div class="g"><div class="gh">يروي عنهم (من خلال ذكره في ترجماتهم)</div>${shy.map(j=>lk(RAWI[j].n,j)).join("")}</div>`:""}`;scrollTo(0,0)}
 function narrator(){
  const n=narr,hs=H.map((h,i)=>[h,i]).filter(([h])=>h.cs.some(c=>c.includes(n))),st=new Set,sh=new Set;
  hs.forEach(([h])=>h.cs.forEach(c=>{const i=c.indexOf(n);if(i>0)st.add(c[i-1]);if(i>=0&&i<c.length-1)sh.add(c[i+1])}));
@@ -218,7 +243,7 @@ function narrator(){
 function about(){const nm=H.filter(matnOf).length;$("info").textContent="";
  $("main").innerHTML=`<div class="g"><div class="gh">عن التطبيق</div><p>تطبيق لاستعراض أسانيد أحاديث «الجمع المسند بين الصحيحين بالأسانيد» وشجراتها وسلاسلها ومداراتها.</p><p class="ct">المدار مستنتج من الأسانيد الموجودة في التطبيق، وليس نقلًا من عبارة الكتاب.</p><div class="ct">${H.length} حديثًا · ${nm} منها بمتونها</div></div>
  <div class="g"><div class="gh">التثبيت</div>${dp?'<button class="tab" id="ib2">ثبّت التطبيق</button>':""}<p class="ct">آيفون: اضغط «مشاركة» في Safari ثم «إضافة إلى الشاشة الرئيسية». أندرويد: من قائمة Chrome اختر «تثبيت التطبيق».</p></div>`}
-let page="h",SL=[],sub="core",narr=null,ft="الكل",fm="",dp=null,HS=false;
+let page="h",SL=[],sub="core",narr=null,rsel=null,ft="الكل",fm="",dp=null,HS=false;
 const AR=' <span class="ct">←</span> ';
 function hl(c,seg){const k=seg.join("|");let a=0;for(;a<=c.length-seg.length;a++)if(c.slice(a,a+seg.length).join("|")===k)break;
  return c.map((x,i)=>i>=a&&i<a+seg.length?`<b class="hi">${x}</b>`:x).join(AR)}
@@ -281,14 +306,14 @@ function comp(){
  SL=[...mp.values()].filter(e=>!q||e.k.includes(q)||[...e.hs.keys()].some(i=>H[i].t.includes(q))).sort((a,b)=>b.hs.size-a.hs.size);
  $("info").textContent=SL.length+" رواية صحابي عن صحابي — اضغط على عنوان الحديث لترى سلسلته كاملة";
  $("main").innerHTML=SL.map((e,g)=>`<div class="g"><div class="gh">${e.seg.join(AR)} <span class="b">${e.hs.size==1?"حديث":e.hs.size==2?"حديثان":e.hs.size+" أحاديث"}</span></div><div class="ct">الراوي: ${e.seg[0]} — المروي عنه: ${e.seg[1]}</div>${[...e.hs.keys()].map(i=>`<div class="h ti" data-g="${g}" data-i="${i}">${H[i].t}<span class="ct"> · ${H[i].m}</span></div><div class="full" style="display:none"></div>`).join("")}</div>`).join("")||'<div class="hint">لا نتائج</div>'}
-function refresh(){({h:list,s:chains,c:comp,f:favs,a:about})[page]()}
-function show(){const d=sel!==null||narr!==null;$("bar").style.display=d?"none":"";sel!==null?detail():narr!==null?narrator():refresh()}
-const snap=()=>({page,sel,narr,mode,cur,q,sub,ft,fm});
+function refresh(){({h:list,r:rawi,s:chains,c:comp,f:favs,a:about})[page]()}
+function show(){const d=sel!==null||narr!==null||rsel!==null;$("bar").style.display=d?"none":"";rsel!==null?rawiD():sel!==null?detail():narr!==null?narrator():refresh()}
+const snap=()=>({page,sel,narr,rsel,mode,cur,q,sub,ft,fm});
 function sv(){try{history.replaceState(snap(),"")}catch(e){}}
 function go(fn){sv();fn();try{history.pushState(snap(),"");HS=true}catch(e){}show()}
-function back(){if(HS){history.back()}else{sel=null;narr=null;syncUI();show()}}
+function back(){if(HS){history.back()}else{sel=null;narr=null;rsel=null;syncUI();show()}}
 function syncUI(){$("nav").querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.p===page));$("tabs").querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.m===cur));$("q").value=q}
-addEventListener("popstate",e=>{const s=e.state;if(s){({page,sel,narr,mode,cur,q,sub,ft,fm}=s)}else{sel=null;narr=null}syncUI();show()});
+addEventListener("popstate",e=>{const s=e.state;if(s){({page,sel,narr,rsel,mode,cur,q,sub,ft,fm}=s);if(rsel===undefined)rsel=null}else{sel=null;narr=null;rsel=null}syncUI();show()});
 $("tabs").innerHTML=M.map(m=>`<button class="tab${m===cur?" on":""}" data-m="${m}">${m}</button>`).join("");
 $("tabs").onclick=e=>{const m=e.target.dataset.m;if(!m)return;cur=m;syncUI();refresh()};
 $("q").oninput=e=>{q=e.target.value.trim();refresh()};
@@ -298,7 +323,9 @@ $("main").onclick=e=>{const T=e.target,c=s=>T.closest(s);
  let x;
  if(x=c("[data-bk]"))return back();
  if(x=c("[data-f]")){const i=+x.dataset.f,k=key(H[i]);FV.has(k)?FV.delete(k):FV.add(k);saveFV();x.textContent=FV.has(k)?"★":"☆";if(page==="f"&&sel===null&&narr===null)favs();return}
- if(x=c("[data-n]"))return go(()=>{narr=x.dataset.n;sel=null});
+ if(x=c("[data-r]"))return go(()=>{rsel=+x.dataset.r;sel=null;narr=null});
+ if(x=c("[data-rt]")){const t=+x.dataset.rt;REX.has(t)?REX.delete(t):REX.add(t);return rawi()}
+ if(x=c("[data-n]"))return go(()=>{narr=x.dataset.n;sel=null;rsel=null});
  if(x=c("[data-cp]")){copy(shareText(H[+x.dataset.cp])).then(()=>toast("تم نسخ الحديث"));return}
  if(x=c("[data-sh]")){const t=shareText(H[+x.dataset.sh]);if(navigator.share)navigator.share({text:t}).catch(()=>{});else copy(t).then(()=>toast("تم النسخ"));return}
  if(x=c("[data-pn]")){const i=+x.dataset.pn;if(i>=0&&i<H.length){sel=i;sv();detail()}return}
@@ -306,9 +333,9 @@ $("main").onclick=e=>{const T=e.target,c=s=>T.closest(s);
  if(x=c("[data-ft]")){ft=x.dataset.ft;return list()}
  if(x=c("[data-q]")){q=x.dataset.q;$("q").value=q;return refresh()}
  if(x=c("[data-sub]")){sub=x.dataset.sub;return chains()}
- if(x=c("[data-open]"))return go(()=>{sel=+x.dataset.open});
+ if(x=c("[data-open]"))return go(()=>{sel=+x.dataset.open;rsel=null});
  if(x=c(".ti"))return toggle(x);
- if(x=c(".t"))return go(()=>{sel=+x.dataset.i});
+ if(x=c(".t"))return go(()=>{sel=+x.dataset.i;rsel=null});
  if(c("#ib2")&&dp){dp.prompt()}};
 // المظهر والخط
 const root=document.documentElement,th0=lsget("th");if(th0)root.dataset.theme=th0;
@@ -325,7 +352,7 @@ fetch("announcements.json",{cache:"no-store"}).then(r=>r.json()).then(a=>{if(!a|
 $("ann").innerHTML='<div class="ban"><div><b>'+(a.title||"")+'</b> '+(a.text||"")+'</div><button id="ax">إغلاق</button></div>';
 $("ax").onclick=()=>{lsset("ann",a.id);$("ann").innerHTML=""}}).catch(()=>{});
 sv();show();
-const CORE_FILES=["index.html","manifest.json","qr.html","qr-lib.js"];
+const CORE_FILES=["index.html","manifest.json","qr.html","qr-lib.js","rawi.js"];
 async function readAll(get){let s="";for(const f of CORE_FILES){const r=await get(f);if(!r||!r.ok&&r.ok!==undefined)return null;s+=await r.text()+"\u0000"}return s}
 let upBusy=0;
 async function chk(){if(upBusy||!navigator.onLine||!window.caches)return;upBusy=1;try{const c=await caches.open("asanid-cache");
