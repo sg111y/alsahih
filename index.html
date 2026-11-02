@@ -46,6 +46,7 @@ mark{background:#f0be5a;color:#1f2a24;border-radius:4px;padding:0 2px}.sn{font-s
 <div class="hint" id="info"></div><div id="main"></div>
 <div id="toast"></div>
 <script src="rawi.js"></script>
+<script src="tafasil.js"></script>
 <script>
 // [مسند, حديث, نوع, السلسلة من أول راوٍ بعد الشيخين إلى الصحابي]
 const D=[
@@ -182,6 +183,20 @@ function favs(){const f=H.map((h,i)=>[h,i]).filter(([h])=>FV.has(key(h)));$("inf
 function shareText(h){const mt=matnOf(h);return `${h.t}\n(${h.m})\n\nالسند: ${h.cs[0].join(" عن ")}\n\nالمتن: ${mt||"—"}\n\nالتخريج: ${takhrij(h)}\nالمدار: ${mudar(h)}\n\n— من تطبيق «الجمع المسند بين الصحيحين»`}
 function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{const a=document.createElement("textarea");a.value=t;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(e){}a.remove()})}
 function toast(t){const d=$("toast");d.textContent=t;d.style.opacity=1;setTimeout(()=>d.style.opacity=0,1700)}
+
+// ===== تفاصيل الحديث: محسوبة من أسانيده + ما ورد في الكتاب من ملاحظات التخريج =====
+function tafsil(h){const t=TAF[key(h)]||{},u=a=>[...new Set(a)];
+ const first=u(h.cs.map(c=>c[0])),near=u(h.cs.map(c=>c[c.length-2])).filter(x=>x),all=u(h.cs.flat());
+ const who=h.ks.has("متفق عليه")?"شيوخ الشيخين":(h.ks.has("أفراد البخاري")?"شيوخ البخاري":"شيوخ مسلم");
+ const L=(a)=>a.map(nl).join("، ");
+ let r=`<div class="g"><div class="gh">التفاصيل</div>`;
+ r+=`<div class="ct">${takhrij(h)}${t.n?` · رقمه في الكتاب: <b>${t.n}</b>`:""}</div>`;
+ r+=`<div class="ct">عدد الطرق: <b>${h.cs.length}</b> · عدد الرواة في أسانيده: <b>${all.length}</b> · المدار: <b>${mudarL(h)}</b></div>`;
+ r+=`<div class="h"><b>${who}:</b> ${L(first)}</div>`;
+ if(near.length)r+=`<div class="h"><b>رووه عن ${h.m} مباشرة:</b> ${L(near)}</div>`;
+ if(t.v&&t.v.length)r+=`<div class="ct" style="margin-top:8px">ما ورد في الكتاب في تخريجه:</div>`+t.v.map(x=>`<div class="h">${x}</div>`).join("");
+ if(t.o)r+=`<div class="ct">وفي الكتاب ${t.o} ${t.o>10?"ملاحظة":"ملاحظات"} أخرى على طرقه لم تُعرض لتشوّه نصها في الملف</div>`;
+ return r+`</div>`}
 function detail(){
  const h=H[sel];
  const ch=mode==="sahabi"?h.cs.map(c=>[...c].reverse()):h.cs;
@@ -195,6 +210,7 @@ function detail(){
  <div class="acts"><button class="tab" data-cp="${sel}">نسخ</button><button class="tab" data-sh="${sel}">مشاركة</button></div>
  <div class="g"><div class="gh">السند</div><div class="h">${h.cs[0].map(nl).join(" عن ")}</div></div>
  <div class="g"><div class="gh">المتن</div>${mt?`<div class="mt">${mt}</div><div class="ct">نُقل من نص الملف (غير المشكول)، وقد يحتاج إلى مراجعة على الأصل</div>`:`<div class="ct">لم يُدخل متنه بعد، لأن النص المتاح لهذا الحديث مشوّه</div>`}</div>
+ ${tafsil(h)}
  <div class="g"><div class="gh">التخريج</div><div>${takhrij(h)}</div><div class="ct">الطرق الواردة في الكتاب:</div>${rs.map(r=>`<div class="h">${r}</div>`).join("")}</div>
  <div class="tabs">${[["sahabi","من الصحابي"],["shaykh","من الشيخ"],["lines","سلاسل"]].map(([k,l])=>`<button class="tab${k===mode?" on":""}" data-md="${k}">${l}</button>`).join("")}</div><div class="hint">${note}</div>${body}
  <div class="pn"><button class="tab" data-pn="${sel-1}"${sel<=0?" disabled":""}>→ السابق</button><button class="tab" data-pn="${sel+1}"${sel>=H.length-1?" disabled":""}>التالي ←</button></div>`;
@@ -212,7 +228,7 @@ const rwb=n=>{const r=RW[n];return r?`<div class="g"><div class="gh">من ملخ
 const TBL=["","الأولى (الصحابة)","الثانية","الثالثة","الرابعة","الخامسة","السادسة","السابعة","الثامنة","التاسعة","العاشرة","الحادية عشرة","الثانية عشرة"];
 const REX=new Set(),rnorm=s=>s.replace(/[\u064B-\u065F\u0670\u0640]/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/\s+/g," ").trim();
 const RN=RAWI.map(o=>rnorm(o.n)),RREV={};Object.keys(RMAP).forEach(k=>RREV[RMAP[k]]=k);
-const rrow=i=>{const o=RAWI[i];return `<div class="h rr" data-r="${i}"><b>${o.n}</b> <span class="ct">· الطبقة ${TBL[o.t]}${o.d?` · ${o.d}`:""}${o.h?` · ${o.h.slice(0,3).join("، ")}`:""}</span></div>`};
+const rrow=i=>{const o=RAWI[i];return `<div class="h rr" data-r="${i}"><b>${o.n}</b> <span class="ct">· الطبقة ${TBL[o.t]}${o.d?` · ${o.d}`:""}${o.h?` · ${o.h.slice(0,3).join("، ")}`:""}${MC[RREV[i]]?` · <b>مسنده ${MC[RREV[i]]} حديثًا</b>`:""}</span></div>`};
 function rawi(){$("info").textContent="";const s=rnorm(q||"");let h="";
  if(s){const a=[],b=[];RAWI.forEach((o,i)=>{if(RN[i].includes(s))a.push(i);else if((o.r||[]).some(x=>rnorm(x).includes(s)))b.push(i)});
   h=`<div class="gh">نتائج البحث (${a.length})</div>`+(a.map(rrow).join("")||'<div class="hint">لا يوجد راوٍ بهذا الاسم في الملخص</div>')+(b.length?`<div class="gh" style="margin-top:10px">وردت أسماؤهم عند من يروون عنهم (${b.length})</div>`+b.map(rrow).join(""):"")}
@@ -225,7 +241,7 @@ function rawiD(){const i=rsel,o=RAWI[i];$("info").textContent="";
  const shy=[];RAWI.forEach((p,j)=>{if(p.ri&&p.ri.includes(i))shy.push(j)});
  const lk=(n,j)=>j>=0?`<button class="chip" data-r="${j}">${n}</button>`:`<span class="chip">${n}</span>`;
  $("main").innerHTML=`<button class="tab" data-bk>→ رجوع</button><h2>${o.n}</h2>
- <div class="ct">الطبقة: <b>${TBL[o.t]}</b>${o.h?` · الحكم: <b>${o.h.join("، ")}</b>`:""}${o.d?` · الوفاة: <b>${o.d}</b>`:""}</div>
+ <div class="ct">الطبقة: <b>${TBL[o.t]}</b>${o.h?` · الحكم: <b>${o.h.join("، ")}</b>`:""}${o.d?` · الوفاة: <b>${o.d}</b>`:""}</div>${MC[app]?`<div class="ct">مسنده في التطبيق: <b>${MC[app]} حديثًا</b></div>`:""}
  ${cnt?`<div class="g"><div class="gh">في التطبيق</div><button class="chip" data-n="${app}">${cnt} ${cnt>10?"حديثًا":"أحاديث"} — اعرضها</button></div>`:`<div class="ct">لا حديث له في التطبيق حاليًا</div>`}
  <div class="g"><div class="gh">الترجمة</div><div class="mt">${o.x}</div><div class="ct">النص مستخرج من ملف ملخص رواة السنة وفيه تشويه في بعض الحروف، فراجع الكتاب عند الاقتباس</div></div>
  ${o.r?`<div class="g"><div class="gh">الرواة عنه</div>${o.r.map((n,k)=>lk(n,o.ri[k])).join("")}</div>`:""}
@@ -314,7 +330,8 @@ function go(fn){sv();fn();try{history.pushState(snap(),"");HS=true}catch(e){}sho
 function back(){if(HS){history.back()}else{sel=null;narr=null;rsel=null;syncUI();show()}}
 function syncUI(){$("nav").querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.p===page));$("tabs").querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.m===cur));$("q").value=q}
 addEventListener("popstate",e=>{const s=e.state;if(s){({page,sel,narr,rsel,mode,cur,q,sub,ft,fm}=s);if(rsel===undefined)rsel=null}else{sel=null;narr=null;rsel=null}syncUI();show()});
-$("tabs").innerHTML=M.map(m=>`<button class="tab${m===cur?" on":""}" data-m="${m}">${m}</button>`).join("");
+const MC={};H.forEach(h=>MC[h.m]=(MC[h.m]||0)+1);
+$("tabs").innerHTML=M.map(m=>`<button class="tab${m===cur?" on":""}" data-m="${m}">${m} (${m==="الكل"?H.length:MC[m]})</button>`).join("");
 $("tabs").onclick=e=>{const m=e.target.dataset.m;if(!m)return;cur=m;syncUI();refresh()};
 $("q").oninput=e=>{q=e.target.value.trim();refresh()};
 $("nav").onclick=e=>{const p=e.target.dataset.p;if(!p)return;page=p;syncUI();refresh();sv()};
@@ -352,7 +369,7 @@ fetch("announcements.json",{cache:"no-store"}).then(r=>r.json()).then(a=>{if(!a|
 $("ann").innerHTML='<div class="ban"><div><b>'+(a.title||"")+'</b> '+(a.text||"")+'</div><button id="ax">إغلاق</button></div>';
 $("ax").onclick=()=>{lsset("ann",a.id);$("ann").innerHTML=""}}).catch(()=>{});
 sv();show();
-const CORE_FILES=["index.html","manifest.json","qr.html","qr-lib.js","rawi.js"];
+const CORE_FILES=["index.html","manifest.json","qr.html","qr-lib.js","rawi.js","tafasil.js"];
 async function readAll(get){let s="";for(const f of CORE_FILES){const r=await get(f);if(!r||!r.ok&&r.ok!==undefined)return null;s+=await r.text()+"\u0000"}return s}
 let upBusy=0;
 async function chk(){if(upBusy||!navigator.onLine||!window.caches)return;upBusy=1;try{const c=await caches.open("asanid-cache");
