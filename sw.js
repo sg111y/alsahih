@@ -3,7 +3,8 @@
 const CACHE = "asanid-cache";
 const CORE = ["./", "index.html", "manifest.json", "qr.html", "qr-lib.js", "rawi.js", "tafasil.js",
   "icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png",
-  "icons/apple-touch-icon.png", "icons/favicon.png"];
+  "icons/apple-touch-icon.png", "icons/favicon.png",
+  "fonts/amiri-arabic-400-normal.woff2", "fonts/amiri-arabic-700-normal.woff2"];
 
 self.addEventListener("install", e => {
   e.waitUntil(
