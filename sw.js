@@ -1,6 +1,6 @@
 // لا حاجة لتغيير أي رقم نسخة: الصفحة تقارن محتوى الملفات المخزّنة بما على الخادم
 // وتعرض «يتوفر إصدار جديد — تحديث الآن» تلقائياً عند اختلافها.
-const CACHE = "asanid-cache-v31";
+const CACHE = "asanid-cache-v34";
 const CORE = ["./", "index.html", "manifest.json", "qr.html", "qr-lib.js", "rawi.js", "tafasil.js",
   "icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png",
   "icons/apple-touch-icon.png", "icons/favicon.png"];
